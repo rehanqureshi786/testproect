@@ -8,7 +8,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
 
-import com.springmvcflow.model.Person;
+import com.springmvcflow.model.Person2;
 
 public class HibernateUtils {
 	private static SessionFactory sessionFactory;
@@ -35,8 +35,7 @@ public class HibernateUtils {
 
 				configuration.setProperties(settings);
 
-				configuration.addAnnotatedClass(
-						Person.class);
+				configuration.addAnnotatedClass(Person2.class);
 
 				ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(settings).build();
 

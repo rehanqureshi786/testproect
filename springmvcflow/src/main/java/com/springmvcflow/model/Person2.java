@@ -8,8 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="person2")
-public class Person {
+@Table(name="Person2")
+public class Person2 {
 	
 	@Id
 	@Column(name="id")
@@ -38,10 +38,6 @@ public class Person {
 	public void setCountry(String country) {
 		this.country = country;
 	}
-	
-	
-	
-	
 	
 	
 

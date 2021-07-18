@@ -1,86 +1,107 @@
 package com.springmvcflow.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
 
-import com.springmvcflow.model.Person;
+import com.springmvcflow.model.Person2;
 import com.utils.HibernateUtils;
 
-
 interface PersonDao {
-	public void addPerson(Person person);
+	public void addPerson(Person2 person);
 
-	public void updatePerson(Person person);
+	public void updatePerson(Person2 person);
 
-	public List<Person> listPersons();
+	public List<Person2> listPersons();
 
-	public Person getPersonById(int id);
+	public Person2 getPersonById(int id);
 
 	public void removePerson(int id);
 }
 
-class Test
-{
-	Test()
-	{
+class Test {
+	Test() {
 		super();
-		
+
 		System.out.println("This is Test class Constructor!!!");
-		
+
 	}
 }
 
 @Repository
 public class PersonDaoImpl implements PersonDao {
 
+	@Override
+	public void addPerson(Person2 person) {
+		// TODO Auto-generated method stub
+
+		Session session = null;
+		Transaction txn = null;
+		try {  
+		    SessionFactory sessionFactory =HibernateUtils.getSessionFactory(); 
+		    session = sessionFactory.openSession();  
+		    txn = session.beginTransaction();
+		    session.save(person); 
+		    txn.commit();
+
+		} catch (Exception e) { 
+		    System.out.println(e.getMessage());
+		} finally {
+		    if (!txn.wasCommitted()) {
+		        txn.rollback();
+		    }
+
+		    session.flush();  
+		    session.close();   
+		}
+		
+	}
+
+	@Override
+	public void updatePerson(Person2 person) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public List<Person2> listPersons() {
+		// TODO Auto-generated method stub
+		Session session = null;
+		Transaction txt=null;
+		List<Person2> list= new ArrayList<Person2>();
+		try {
+			session=HibernateUtils.getSessionFactory().openSession();
+			session.beginTransaction();
+			
+			Query query = session.createQuery("from Person2");
+			list = query.list();
+			//txt.commit();
+			System.out.println("I am here after transaction commited");
+			for (Person2 student : list) {
+				System.out.println(" Student Name: " + student.getName());
+			}
 	
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			e.getMessage();
+		}
+		finally {
 		
-	@Override
-	public void addPerson(Person person) {
-		// TODO Auto-generated method stub
-		 
-		System.out.println("Transaction Begin!!");
-		
-		//SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
-		Session session=HibernateUtils.getSessionFactory().openSession();
-		Transaction ts=session.beginTransaction();
-		
-		Person p=new Person();
-		p.setId(10);
-		p.setName("Rehan");
-		p.setCountry("India");
-		
-		
-		session.save(person);
+			session.flush();
+			session.close();
+			
+		}
+				return list;
 	}
 
 	@Override
-	public void updatePerson(Person person) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public List<Person> listPersons() {
-		// TODO Auto-generated method stub
-		Session session=HibernateUtils.getSessionFactory().openSession();
-		session.beginTransaction();
-		System.out.println();
-		Query query=session.createQuery("from Person2");
-		List<Person> list=query.list();
-		for(Person student : list)
-		  {
-		System.out.println(" Student Name: "+student.getName());
-		  }
-		return list;
-	}
-
-	@Override
-	public Person getPersonById(int id) {
+	public Person2 getPersonById(int id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -91,17 +112,16 @@ public class PersonDaoImpl implements PersonDao {
 
 	}
 
-	public static void main(String args[])
-	{
-		Test st=new Test();
-		PersonDaoImpl per=new PersonDaoImpl();
-		Person person=new Person();	
-		per.addPerson(person);
-		List<Person> list=per.listPersons();
-		System.out.println(list);
-		for(Person p:list)
-		{
-			System.out.println("Name: "+p.getName());
-		}
+	public static void main(String args[]) {
+		
+		PersonDaoImpl pdao=new PersonDaoImpl();
+		Person2 person=new Person2();
+		person.setId(50);
+		person.setCountry("India");
+		person.setName("Asif Shaikh");
+		pdao.addPerson(person);
+		
+		pdao.listPersons();
+		
 	}
 }
